@@ -19,6 +19,12 @@
       "properties": {
         "enabled": { "type": "boolean", "default": true }
       }
+    },
+    "ingress-nginx": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean", "default": true }
+      }
     }
   }
 }
