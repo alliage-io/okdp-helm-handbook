@@ -53,3 +53,21 @@ secret-generator:
     capabilities:
       drop: ["ALL"]
 
+ingress-nginx:
+  enabled: true
+  controller:
+    allowSnippetAnnotations: "false"
+    extraArgs:
+      enable-ssl-passthrough: "true"
+    admissionWebhooks:
+      enabled: true
+    service:
+      # To change type you just need to update here
+      # type: LoadBlancer
+      type: NodePort
+      nodePorts:
+        http: 30080
+        https: 30443
+      # annotations:
+      #   metallb.universe.tf/loadBalancerIPs: "192.168.1.50"
+
