@@ -1,0 +1,71 @@
+#
+# Copyright 2026 The OKDP Authors.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+{{- if and .Values.issuers.enabled .Values.issuers.caClusterIssuers }}
+{{- if .Capabilities.APIVersions.Has "cert-manager.io/v1" }}
+{{- range .Values.issuers.caClusterIssuers }}
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: {{ .name }}
+  labels:
+    cert-issuers.okdp.io/type: "ca"
+    cert-issuers.okdp.io/issuer-name: {{ .name | quote }}
+  annotations:
+    cert-issuers.okdp.io/managed-by: "helm-pure"
+spec:
+  ca:
+    secretName: {{ .name }}
+
+{{- if .ca_key }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .name }}
+  namespace: default
+  labels:
+    cert-issuers.okdp.io/type: "ca-secret"
+    cert-issuers.okdp.io/issuer-name: {{ .name | quote }}
+  annotations:
+    {{- if $.Values.tools.replicator.enabled }}
+    replicator.v1.select-by-jm.io/replicate-to: "*" # Annotation standard pour copier le secret si nécessaire
+    {{- end }}
+type: kubernetes.io/tls
+data:
+  tls.crt: {{ .ca_crt | quote }}
+  tls.key: {{ .ca_key | quote }}
+{{- end }}
+
+{{- if .ca_crt }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .name }}-ca
+  namespace: default
+  labels:
+    cert-issuers.okdp.io/type: "ca-public"
+    cert-issuers.okdp.io/issuer-name: {{ .name | quote }}
+type: Opaque
+data:
+  ca.crt: {{ .ca_crt | quote }}
+{{- end }}
+
+{{- end }}
+{{- end }}
+{{- end }}

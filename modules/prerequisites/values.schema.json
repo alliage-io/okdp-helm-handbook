@@ -25,6 +25,118 @@
       "properties": {
         "enabled": { "type": "boolean", "default": true }
       }
+    },
+    "cert-manager": {
+      "type": "object",
+      "properties": {
+        "installCRDs": { "type": "boolean", "default": false },
+        "enableCertificateOwnerRef": { "type": "boolean", "default": true },
+        "global": {
+          "type": "object",
+          "properties": {
+            "namespace": { "type": "string", "default": "cert-manager" }
+          }
+        },
+        "webhook": {
+          "type": "object",
+          "properties": {
+            "extraArgs": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "trust-manager": {
+      "type": "object",
+      "properties": {
+        "namespace": { "type": "string", "default": "cert-manager" },
+        "app": {
+          "type": "object",
+          "properties": {
+            "trust": {
+              "type": "object",
+              "properties": {
+                "namespace": { "type": "string" }
+              }
+            }
+          }
+        },
+        "secretTargets": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "authorizedSecrets": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "issuers": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean", "default": true },
+        "caClusterIssuers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "ca_crt": { "type": "string" },
+              "ca_key": { "type": "string" }
+            }
+          }
+        },
+        "selfSignedClusterIssuers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "certificate": {
+                "type": "object",
+                "properties": {
+                  "commonName": { "type": "string" },
+                  "organization": { "type": "string" },
+                  "country": { "type": "string" },
+                  "validity": { "type": "string" },
+                  "algorithm": { "type": "string" },
+                  "size": { "type": "integer" }
+                }
+              }
+            }
+          }
+        },
+        "bundle": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "name": { "type": "string" },
+            "target": {
+              "type": "object",
+              "properties": {
+                "configMap": {
+                  "type": "object",
+                  "properties": {
+                    "enabled": { "type": "boolean" },
+                    "key": { "type": "string" }
+                  }
+                },
+                "secret": {
+                  "type": "object",
+                  "properties": {
+                    "enabled": { "type": "boolean" },
+                    "key": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 }
