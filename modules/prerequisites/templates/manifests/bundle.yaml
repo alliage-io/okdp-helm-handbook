@@ -31,7 +31,6 @@ spec:
     {{- end }}
     additionalFormats:
       pkcs12:
-        enabled: true
         key: "bundle.p12"
 {{- end }}
 {{- end }}

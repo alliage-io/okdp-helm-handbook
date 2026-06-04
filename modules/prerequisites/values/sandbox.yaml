@@ -75,16 +75,16 @@ cert-manager:
   installCRDs: false
   enableCertificateOwnerRef: true
   global:
-    namespace: "default"
+    namespace: "okdp-prerequisites"
   webhook:
     extraArgs:
       - "--dynamic-serving-leaf-duration=2160h"
 
 trust-manager:
-  namespace: "default"
+  namespace: "okdp-prerequisites"
   app:
     trust:
-      namespace: "default"
+      namespace: "okdp-prerequisites"
   secretTargets:
     enabled: true
     authorizedSecrets:
