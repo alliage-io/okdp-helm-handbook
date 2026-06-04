@@ -37,7 +37,7 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: {{ .name }}
-  namespace: default
+  namespace: okdp-prerequisites
   labels:
     cert-issuers.okdp.io/type: "ca-secret"
     cert-issuers.okdp.io/issuer-name: {{ .name | quote }}
@@ -57,7 +57,7 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: {{ .name }}-ca
-  namespace: default
+  namespace: okdp-prerequisites
   labels:
     cert-issuers.okdp.io/type: "ca-public"
     cert-issuers.okdp.io/issuer-name: {{ .name | quote }}
