@@ -11,6 +11,23 @@ A Helm chart for installing OKDP prerequisites.
 To install the chart with the release name `prerequisites`:
 
 ```sh
+# 1. cert-manager + issuers + trust-manager
+helm dependency update modules/cert-manager
+helm install cert-manager modules/cert-manager \
+  -f modules/cert-manager/values/sandbox.yaml \
+  -n okdp-prerequisites \
+  --create-namespace \
+  --wait
+
+# 2. trust-manager
+helm dependency update modules/trust-manager
+helm install trust-manager modules/trust-manager \
+  -f modules/trust-manager/values/sandbox.yaml \
+  -n okdp-prerequisites \
+  --create-namespace \
+  --wait
+
+# 3. prerequisites (no cert-manager dependency, deploys independently)
 helm dependency update modules/prerequisites/
 helm install prerequisites modules/prerequisites \
   -f modules/prerequisites/values/sandbox.yaml \
@@ -22,5 +39,18 @@ helm install prerequisites modules/prerequisites \
 
 ```sh
 helm uninstall prerequisites -n okdp-prerequisites
+```
+
+## Uninstalling the chart `trust-manager`
+
+```sh
+helm uninstall trust-manager -n okdp-trust-manager
+```
+
+## Uninstalling the chart `cert-manager`
+
+```sh
+helm uninstall cert-manager -n okdp-cert-manager
+kubectl delete crd bundles.trust.cert-manager.io
 kubectl delete namespace okdp-prerequisites
 ```

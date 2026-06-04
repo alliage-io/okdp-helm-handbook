@@ -62,52 +62,7 @@ ingress-nginx:
     admissionWebhooks:
       enabled: true
     service:
-      # To change type you just need to update here
-      # type: LoadBlancer
       type: NodePort
       nodePorts:
         http: 30080
         https: 30443
-      # annotations:
-      #   metallb.universe.tf/loadBalancerIPs: "192.168.1.50"
-
-cert-manager:
-  installCRDs: false
-  enableCertificateOwnerRef: true
-  global:
-    namespace: "okdp-prerequisites"
-  webhook:
-    extraArgs:
-      - "--dynamic-serving-leaf-duration=2160h"
-
-trust-manager:
-  namespace: "okdp-prerequisites"
-  app:
-    trust:
-      namespace: "okdp-prerequisites"
-  secretTargets:
-    enabled: true
-    authorizedSecrets:
-      - "certs-bundle"
-
-issuers:
-  enabled: true
-  caClusterIssuers: []
-  selfSignedClusterIssuers:
-    - name: "default-issuer"
-      certificate:
-        commonName: "OKDP Sandbox Self-Signed CA"
-        organization: "OKDP"
-        country: "FR"
-        validity: "8760h"
-        algorithm: "ECDSA"
-        size: 256
-  bundle:
-    enabled: true
-    name: "certs-bundle"
-    target:
-      configMap:
-        enabled: true
-        key: "root-certs.pem"
-      secret:
-        enabled: true

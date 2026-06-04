@@ -13,24 +13,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+trust-manager:
+  app:
+    trust:
+      namespace: "okdp-prerequisites"
+  secretTargets:
+    enabled: true
+    authorizedSecrets:
+      - "certs-bundle"
 
-{{- if and .Values.issuers.enabled .Values.issuers.bundle.enabled }}
-{{- if .Capabilities.APIVersions.Has "trust.cert-manager.io/v1alpha1" }}
----
-apiVersion: trust.cert-manager.io/v1alpha1
-kind: Bundle
-metadata:
-  name: {{ .Values.issuers.bundle.name }}
-spec:
-  sources:
-    - useDefaultCAs: true
+bundle:
+  enabled: true
+  name: "certs-bundle"
   target:
-    {{- if .Values.issuers.bundle.target.configMap.enabled }}
     configMap:
-      key: {{ .Values.issuers.bundle.target.configMap.key | quote }}
-    {{- end }}
-    additionalFormats:
-      pkcs12:
-        key: "bundle.p12"
-{{- end }}
-{{- end }}
+      enabled: true
+      key: "root-certs.pem"
+    secret:
+      enabled: true
+      key: "ca.crt"

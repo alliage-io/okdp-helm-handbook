@@ -27,6 +27,9 @@ metadata:
     cert-issuers.okdp.io/issuer-name: {{ .name | quote }}
   annotations:
     cert-issuers.okdp.io/managed-by: "helm-pure"
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "1"
+    helm.sh/hook-delete-policy: before-hook-creation
 spec:
   ca:
     secretName: {{ .name }}
@@ -37,7 +40,7 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: {{ .name }}
-  namespace: okdp-prerequisites
+  namespace: {{ $.Release.Namespace }}
   labels:
     cert-issuers.okdp.io/type: "ca-secret"
     cert-issuers.okdp.io/issuer-name: {{ .name | quote }}
@@ -45,6 +48,9 @@ metadata:
     {{- if $.Values.tools.replicator.enabled }}
     replicator.v1.select-by-jm.io/replicate-to: "*" # Annotation standard pour copier le secret si nécessaire
     {{- end }}
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "0"
+    helm.sh/hook-delete-policy: before-hook-creation
 type: kubernetes.io/tls
 data:
   tls.crt: {{ .ca_crt | quote }}
@@ -57,10 +63,14 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: {{ .name }}-ca
-  namespace: okdp-prerequisites
+  namespace: {{ $.Release.Namespace }}
   labels:
     cert-issuers.okdp.io/type: "ca-public"
     cert-issuers.okdp.io/issuer-name: {{ .name | quote }}
+  annotations:
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "0"
+    helm.sh/hook-delete-policy: before-hook-creation
 type: Opaque
 data:
   ca.crt: {{ .ca_crt | quote }}
