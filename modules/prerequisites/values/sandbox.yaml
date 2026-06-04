@@ -71,3 +71,43 @@ ingress-nginx:
       # annotations:
       #   metallb.universe.tf/loadBalancerIPs: "192.168.1.50"
 
+cert-manager:
+  installCRDs: false
+  enableCertificateOwnerRef: true
+  global:
+    namespace: "default"
+  webhook:
+    extraArgs:
+      - "--dynamic-serving-leaf-duration=2160h"
+
+trust-manager:
+  namespace: "default"
+  app:
+    trust:
+      namespace: "default"
+  secretTargets:
+    enabled: true
+    authorizedSecrets:
+      - "certs-bundle"
+
+issuers:
+  enabled: true
+  caClusterIssuers: []
+  selfSignedClusterIssuers:
+    - name: "default-issuer"
+      certificate:
+        commonName: "OKDP Sandbox Self-Signed CA"
+        organization: "OKDP"
+        country: "FR"
+        validity: "8760h"
+        algorithm: "ECDSA"
+        size: 256
+  bundle:
+    enabled: true
+    name: "certs-bundle"
+    target:
+      configMap:
+        enabled: true
+        key: "root-certs.pem"
+      secret:
+        enabled: true
