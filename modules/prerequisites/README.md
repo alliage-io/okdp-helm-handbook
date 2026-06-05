@@ -35,21 +35,14 @@ helm install prerequisites modules/prerequisites \
   --create-namespace
 ```
 
-## Uninstalling the chart `prerequisites`
+## Teardown
 
 ```sh
+# uninstalling the chart prerequisites
 helm uninstall prerequisites -n okdp-prerequisites
-```
-
-## Uninstalling the chart `trust-manager`
-
-```sh
+# Uninstalling the chart trust-manager
 helm uninstall trust-manager -n okdp-trust-manager
-```
-
-## Uninstalling the chart `cert-manager`
-
-```sh
+# uninstalling the chart cert-manager
 helm uninstall cert-manager -n okdp-cert-manager
 kubectl delete crd bundles.trust.cert-manager.io
 kubectl delete namespace okdp-prerequisites
