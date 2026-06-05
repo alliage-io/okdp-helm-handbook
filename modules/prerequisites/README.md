@@ -11,7 +11,7 @@ A Helm chart for installing OKDP prerequisites.
 To install the chart with the release name `prerequisites`:
 
 ```sh
-# 1. cert-manager + issuers + trust-manager
+# 1. cert-manager + issuers
 helm dependency update modules/cert-manager
 helm install cert-manager modules/cert-manager \
   -f modules/cert-manager/values/sandbox.yaml \
