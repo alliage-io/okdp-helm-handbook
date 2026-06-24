@@ -17,39 +17,52 @@ reloader:
   enabled: true
   reloader:
     deployment:
-      securityContext:
-        seccompProfile: { type: RuntimeDefault }
       containerSecurityContext:
+        # Restricts privileges at the container process level.
         allowPrivilegeEscalation: false
+        # Set to true if you have a pod security policy that enforces readOnlyRootFilesystem.
         readOnlyRootFilesystem: true
         capabilities:
+          # Removes all default Linux kernel capabilities: it removes all system
+          # "superpowers" (the app cannot control the underlying system).
           drop: ["ALL"]
 
 replicator:
   enabled: true
+  # Configures security settings at the entire Pod level.
   podSecurityContext:
+    # Uses the container runtime's default system call filter.
     seccompProfile: { type: RuntimeDefault }
+  # Configures security settings specifically for the container.
   securityContext:
     allowPrivilegeEscalation: false
     readOnlyRootFilesystem: true
     runAsNonRoot: true
     runAsUser: 1000
     capabilities:
+      # Removes all default Linux kernel capabilities: it removes all system
+      # "superpowers" (the app cannot control the underlying system).
       drop: ["ALL"]
+  # Sets the delay before checking if the container is alive and healthy.
   livenessProbe: { initialDelaySeconds: 10 }
+  # Sets the delay before checking if the container is ready to accept traffic.
   readinessProbe: { initialDelaySeconds: 10 }
 
 secret-generator:
   enabled: true
   fullnameOverride: secret-generator
+  # Configures security settings at the entire Pod level.
   podSecurityContext:
     fsGroup: 2000
+    # Uses the container runtime's default system call filter.
     seccompProfile: { type: RuntimeDefault }
+  # Configures security settings specifically for the container.
   securityContext:
     allowPrivilegeEscalation: false
     readOnlyRootFilesystem: true
     runAsNonRoot: true
     runAsUser: 1000
     capabilities:
+      # Removes all default Linux kernel capabilities: it removes all system
+      # "superpowers" (the app cannot control the underlying system).
       drop: ["ALL"]
-
